@@ -1,78 +1,49 @@
-/*
- * Basic kernel module taking commandline arguments.
- *
- * Author:
- * 	Stefan Wendler (devnull@kaltpost.de)
- *
- * This software is licensed under the terms of the GNU General Public
- * License version 2, as published by the Free Software Foundation, and
- * may be copied, distributed, and modified under those terms.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- */
-
 #include <linux/module.h>
 #include <linux/kernel.h>
+#include <linux/gpio.h>
+#include <linux/interrupt.h> 
 
 /*
  * The module commandline arguments ...
  */
-static short int 	 myshort 		= 1;
-static int 			 myint 			= 420;
-static long int 	 mylong 		= 9999;
-static char     	*mystring 		= "blah";
-static int 			 myintArray[2] 	= { -1, -1 };
-static int 			 arr_argc 		= 0;
+static short int     ioNummers[2]   = { 0, 0 };
+static int           toggleSpeed    = 500;
 
-module_param(myshort, short, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
-MODULE_PARM_DESC(myshort, "A short integer");
-module_param(myint, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-MODULE_PARM_DESC(myint, "An integer");
-module_param(mylong, long, S_IRUSR);
-MODULE_PARM_DESC(mylong, "A long integer");
-module_param(mystring, charp, 0000);
-MODULE_PARM_DESC(mystring, "A character string");
-module_param_array(myintArray, int, &arr_argc, 0000);
-MODULE_PARM_DESC(myintArray, "An array of integers");
+module_param(ioNummers, short, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
+MODULE_PARM_DESC(ioNummers, "An array of IO numbers to toggle, max 2");
+module_param(toggleSpeed, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
+MODULE_PARM_DESC(toggleSpeed, "The toggling speed for the IO's, in ms");
 
 /*
  * Module init function
  */
-static int __init clargmod_init(void)
+static int __init opdrachtmod_init(void)
 {
-	int i;
+    int i;
 
-	printk(KERN_INFO "%s\n=============\n", __func__);
-	printk(KERN_INFO "myshort is a short integer: %hd\n", myshort);
-	printk(KERN_INFO "myint is an integer: %d\n", myint);
-	printk(KERN_INFO "mylong is a long integer: %ld\n", mylong);
-	printk(KERN_INFO "mystring is a string: %s\n", mystring);
+    printk(KERN_INFO "%s\n=============\n", __func__);
+    printk(KERN_INFO "ioNummers is an array of IO numbers to toggle, max 2: %d\n", ioNummers);
+    printk(KERN_INFO "toggleSpeed is the toggling speed for the IO's, in ms: %hd\n", toggleSpeed);
 
-	for (i = 0; i < (sizeof myintArray / sizeof (int)); i++)
-	{
-		printk(KERN_INFO "myintArray[%d] = %d\n", i, myintArray[i]);
-	}
+    for (i = 0; i < (sizeof ioNummers / sizeof (int)); i++)
+    {
+        printk(KERN_INFO "ioNummers[%d] = %d\n", i, ioNummers[i]);
+    }
 
-	printk(KERN_INFO "got %d arguments for myintArray.\n", arr_argc);
-
-	return 0;
+    return 0;
 }
 
 /*
  * Exit function
  */
-static void __exit clargmod_exit(void)
+static void __exit opdrachtmod_exit(void)
 {
-	printk(KERN_INFO "%s\n", __func__);
+    printk(KERN_INFO "%s\n", __func__);
 }
 
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Stefan Wendler");
-MODULE_DESCRIPTION("Basic Linux Kernel module taking command line arguments");
+MODULE_LICENSE("MIT");
+MODULE_AUTHOR("Fishezzz");
+MODULE_DESCRIPTION("Basic Linux Kernel module for toggling 2 IO's and counting IO edges");
 
-module_init(clargmod_init);
-module_exit(clargmod_exit);
+module_init(opdrachtmod_init);
+module_exit(opdrachtmod_exit);
