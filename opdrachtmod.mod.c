@@ -26,10 +26,18 @@ static const struct modversion_info ____versions[]
 __used
 __attribute__((section("__versions"))) = {
 	{ 0xf230cadf, "module_layout" },
-	{ 0xfd958c00, "param_ops_int" },
 	{ 0xea5181bb, "param_array_ops" },
-	{ 0x10c74246, "param_ops_short" },
+	{ 0xfd958c00, "param_ops_int" },
+	{ 0xfe990052, "gpio_free" },
+	{ 0x97934ecf, "del_timer_sync" },
+	{ 0xc6f46339, "init_timer_key" },
+	{ 0x403f9529, "gpio_request_one" },
+	{ 0x91715312, "sprintf" },
 	{ 0x2e5810c6, "__aeabi_unwind_cpp_pr1" },
+	{ 0x24d273d1, "add_timer" },
+	{ 0x526c3a6c, "jiffies" },
+	{ 0x6a8eabbf, "gpiod_set_raw_value" },
+	{ 0xe851e37e, "gpio_to_desc" },
 	{ 0x7c32d0f0, "printk" },
 	{ 0xb1ad28e0, "__gnu_mcount_nc" },
 };
@@ -40,4 +48,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "653D31C6231792749C393F6");
+MODULE_INFO(srcversion, "225F72F6C68A6E3783BDF92");
