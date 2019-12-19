@@ -103,6 +103,7 @@ static void __exit opdrachtmod_exit(void)
     // gpio_free(ioNummers[1]);
 }
 
+MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Fishezzz");
 MODULE_DESCRIPTION("Basic Linux Kernel module for toggling 2 IO's and counting IO edges");
 
