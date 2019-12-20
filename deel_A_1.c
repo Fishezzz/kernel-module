@@ -12,7 +12,7 @@
 static int       data           = 0;
 static int       toggleSpeed    = 500;
 static int       ioNummers[2]   = { -1, -1 };
-static int       arr_argc 		= 0;
+static int       arr_argc       = 0;
 static struct timer_list blink_timer;
 
 module_param(data, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
@@ -27,23 +27,23 @@ MODULE_PARM_DESC(ioNummers, "An array of IO numbers to toggle, max 2");
  */
 static void blink_timer_func(struct timer_list* t)
 {
-    int i = 0;
+	int i = 0;
     
 	printk(KERN_INFO "%s\n", __func__);
 
-    // Set RELAIS GPIOs output to data
-    for(i = 0; i < ARRAY_SIZE(ioNummers); i++)
-    {
-        if (ioNummers[i] > 0)
-        {
-            gpio_set_value(ioNummers[i], data);
-        }
-    }
-
+	// Set RELAIS GPIOs output to data
+	for(i = 0; i < ARRAY_SIZE(ioNummers); i++)
+	{
+		if (ioNummers[i] > 0)
+		{
+			gpio_set_value(ioNummers[i], data);
+		}
+	}
+	
 	data = !data; 
 	
-	/* schedule next execution */
-	blink_timer.expires = jiffies + ((toggleSpeed / 1000) * HZ);
+	/* Schedule next execution */
+	blink_timer.expires = jiffies + ((toggleSpeed * HZ) / 1000);
 	add_timer(&blink_timer);
 }
 
@@ -52,37 +52,37 @@ static void blink_timer_func(struct timer_list* t)
  */
 static int __init deel_A_1_init(void)
 {
-    int i = 0, ret = 0;
-
-    printk(KERN_INFO "%s\n=============\n", __func__);
-    printk(KERN_INFO "toggleSpeed is the toggling speed for the IO's, in ms: %i\n", toggleSpeed);
-
-    for (i = 0; i < ARRAY_SIZE(ioNummers); i++)
-    {
-        printk(KERN_INFO "ioNummers[%i] = %hi\n", i, ioNummers[i]);
-    }
-
-    // register RELAIS GPIOs, turn RELAIS on
-    for (i = 0; i < ARRAY_SIZE(ioNummers); i++)
-    {
-        if (ioNummers[i] > 0)
-        {
-	        ret = gpio_request_one(ioNummers[i], GPIOF_OUT_INIT_LOW, "RELAIS");
-            if (ret)
-            {
-                printk(KERN_ERR "Unable to request GPIOs: %d\n", ret);
-                return ret;
-            }
-        }
-    }
-
-	/* init timer, add timer function */
+	int i = 0, ret = 0;
+	
+	printk(KERN_INFO "%s\n=============\n", __func__);
+	printk(KERN_INFO "toggleSpeed is the toggling speed for the IO's, in ms: %i\n", toggleSpeed);
+	
+	for (i = 0; i < ARRAY_SIZE(ioNummers); i++)
+	{
+		printk(KERN_INFO "ioNummers[%i] = %i\n", i, ioNummers[i]);
+	}
+	
+	// Register RELAIS GPIOs, turn RELAIS on
+	for (i = 0; i < ARRAY_SIZE(ioNummers); i++)
+	{
+		if (ioNummers[i] > 0)
+		{
+			ret = gpio_request_one(ioNummers[i], GPIOF_OUT_INIT_LOW, "RELAIS");
+			if (ret)
+			{
+				printk(KERN_ERR "Unable to request GPIOs: %d\n", ret);
+				return ret;
+			}
+		}
+	}
+	
+	/* Init timer, add timer function */
 	timer_setup(&blink_timer, blink_timer_func, 0);
 	blink_timer.function = blink_timer_func;
-	blink_timer.expires = jiffies + ((toggleSpeed / 1000) * HZ);
+	blink_timer.expires = jiffies + ((toggleSpeed * HZ) / 1000);
 	add_timer(&blink_timer);
-
-    return ret;
+	
+	return ret;
 }
 
 /*
@@ -90,30 +90,30 @@ static int __init deel_A_1_init(void)
  */
 static void __exit deel_A_1_exit(void)
 {
-    int i = 0;
-
-    printk(KERN_INFO "%s\n", __func__);
-
-	// deactivate timer if running
+	int i = 0;
+	
+	printk(KERN_INFO "%s\n", __func__);
+	
+	// Deactivate timer if running
 	del_timer_sync(&blink_timer);
-
-    // turn RELAIS off
-    for (i = 0; i < ARRAY_SIZE(ioNummers); i++)
-    {
-        if (ioNummers[i] > 0)
-        {
-            gpio_set_value(ioNummers[i], 0);
-        }
-    }
-
-    // unregister GPIO
-    for (i = 0; i < ARRAY_SIZE(ioNummers); i++)
-    {
-        if (ioNummers[i] > 0)
-        {
-            gpio_free(ioNummers[i]);
-        }
-    }
+	
+	// Turn RELAIS off
+	for (i = 0; i < ARRAY_SIZE(ioNummers); i++)
+	{
+		if (ioNummers[i] > 0)
+		{
+			gpio_set_value(ioNummers[i], 0);
+		}
+	}
+	
+	// Unregister GPIO
+	for (i = 0; i < ARRAY_SIZE(ioNummers); i++)
+	{
+		if (ioNummers[i] > 0)
+		{
+			gpio_free(ioNummers[i]);
+		}
+	}
 }
 
 MODULE_LICENSE("GPL");
