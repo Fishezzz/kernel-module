@@ -32,7 +32,6 @@ __attribute__((section("__versions"))) = {
 	{ 0x97934ecf, "del_timer_sync" },
 	{ 0xc6f46339, "init_timer_key" },
 	{ 0x403f9529, "gpio_request_one" },
-	{ 0x91715312, "sprintf" },
 	{ 0x2e5810c6, "__aeabi_unwind_cpp_pr1" },
 	{ 0x24d273d1, "add_timer" },
 	{ 0x526c3a6c, "jiffies" },
@@ -48,4 +47,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "225F72F6C68A6E3783BDF92");
+MODULE_INFO(srcversion, "3899932295EEB62F266C9C5");

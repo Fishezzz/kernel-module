@@ -50,7 +50,7 @@ static void blink_timer_func(struct timer_list* t)
 /*
  * Module init function
  */
-static int __init opdrachtmod_init(void)
+static int __init deel_A_1_init(void)
 {
     int i = 0, ret = 0;
 
@@ -67,9 +67,7 @@ static int __init opdrachtmod_init(void)
     {
         if (ioNummers[i] > 0)
         {
-            char *name = "";
-            sprintf(name, "RELAIS %i", i+1);
-	        ret = gpio_request_one(ioNummers[i], GPIOF_OUT_INIT_LOW, name);
+	        ret = gpio_request_one(ioNummers[i], GPIOF_OUT_INIT_LOW, "RELAIS");
             if (ret)
             {
                 printk(KERN_ERR "Unable to request GPIOs: %d\n", ret);
@@ -90,7 +88,7 @@ static int __init opdrachtmod_init(void)
 /*
  * Module exit function
  */
-static void __exit opdrachtmod_exit(void)
+static void __exit deel_A_1_exit(void)
 {
     int i = 0;
 
@@ -122,5 +120,5 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Fishezzz");
 MODULE_DESCRIPTION("Basic Linux Kernel module for toggling 2 IO's and counting IO edges");
 
-module_init(opdrachtmod_init);
-module_exit(opdrachtmod_exit);
+module_init(deel_A_1_init);
+module_exit(deel_A_1_exit);
