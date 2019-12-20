@@ -11,7 +11,6 @@
  */
 static int	 inputBtn	= 4;
 static int	 button_irq	= -1;
-static int	 arr_argc	= 0;
 int			 counter	= 0;
 
 module_param(inputBtn, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
@@ -23,7 +22,8 @@ MODULE_PARM_DESC(inputBtn, "Input button");
 static irqreturn_t button_isr(int irq, void *data)
 {
     // Counter optellen als er een interupt is op de knop
-    if(irq == button_irq) {
+    if (irq == button_irq)
+    {
         counter++;
     }
 
@@ -41,11 +41,13 @@ static int __init deel_A_2_init(void)
     printk(KERN_INFO "%s\n", __func__);
 
     
-    if(inputBtn > 0){
+    if (inputBtn > 0)
+    {
         // Register button GPIO
         ret = gpio_request_one(inputBtn, GPIOF_IN, "Input button");
 
-        if (ret) {
+        if (ret)
+        {
 			printk(KERN_ERR "Unable to request GPIO: %d\n", ret);
 			return 0;
         }
@@ -55,7 +57,8 @@ static int __init deel_A_2_init(void)
 
         ret = gpio_to_irq(inputBtn);
 
-        if(ret < 0) {
+        if (ret < 0)
+        {
 			printk(KERN_ERR "Unable to request IRQ: %d\n", ret);
 			goto fail1;
         }
@@ -67,14 +70,15 @@ static int __init deel_A_2_init(void)
         // Set up IRQ method for input button
         ret = request_irq(button_irq, button_isr, IRQF_TRIGGER_RISING /*| IRQF_DISABLED*/, "gpiomod#Inputbutton", NULL);
 
-        if(ret) {
-                printk(KERN_ERR "Unable to request IRQ: %d\n", ret);
-                goto fail1;
+        if (ret)
+        {
+            printk(KERN_ERR "Unable to request IRQ: %d\n", ret);
+            goto fail1;
         }
 
         // cleanup what has been setup so far
         fail1:
-                gpio_free(inputBtn);
+            gpio_free(inputBtn);
     }
 	
     return ret;
@@ -85,8 +89,6 @@ static int __init deel_A_2_init(void)
  */
 static void __exit deel_A_2_exit(void)
 {
-    int i;
-
     printk(KERN_INFO "%s\n", __func__);
 
     // free irqs
